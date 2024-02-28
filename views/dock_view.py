@@ -2,20 +2,24 @@ import sqlite3
 import json
 
 
-def create_dock(id, dock_data):
+def create_dock(location, capacity):
+    # Open a connection to the database
     with sqlite3.connect("./shipping.db") as conn:
         db_cursor = conn.cursor()
 
+        # Execute the SQL query to insert a new dock
         db_cursor.execute(
             """
-            UPDATE Dock
-                SET
-                    location = ?,
-                    capacity = ?
-            WHERE id = ?
+            INSERT INTO Dock (location, capacity)
+            VALUES (?, ?)
             """,
-            (dock_data["location"], dock_data["capacity"], id),
+            (location, capacity),
         )
+
+        # Commit the transaction
+        conn.commit()
+
+    return True
 
 
 def update_dock(id, dock_data):
